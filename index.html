@@ -418,7 +418,8 @@
             width: 100%;
             height: 100%;
             background-size: cover;
-            background-position: center; /* Center the image */
+            background-position: center;
+            /* Center the image */
         }
 
         .pixel {
@@ -439,21 +440,32 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            margin-bottom: 10px;
         }
 
         #guess-input {
             padding: 8px;
             font-size: 16px;
             margin-right: 10px;
+            flex-grow: 1; /* Allow input to take more space */
         }
 
-        #submit-button {
+        #submit-button, #reveal-button {
             padding: 8px 16px;
             font-size: 16px;
-            background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
+            border-radius: 0.375rem;
+            margin-left: 5px;
+        }
+
+        #submit-button {
+            background-color: #4CAF50;
+        }
+
+        #reveal-button {
+            background-color: #f44336;
         }
 
         #confetti-canvas {
@@ -466,7 +478,7 @@
         }
 
         #game-explanation {
-            text-align: center;
+            text-align: left;
             font-size: 16px;
             margin-bottom: 20px;
         }
@@ -482,10 +494,12 @@
 
         #game-explanation li {
             margin-bottom: 5px;
+font-size: small;
+
         }
 
         #game-over {
-
+            
             top: 0;
             left: 0;
             width: 100%;
@@ -496,18 +510,23 @@
             align-items: center;
             flex-direction: column;
             color: white;
-            font-size: 24px;
+            font-size: 14px;
             text-align: center;
         }
 
         #game-over button {
-            padding: 10px 20px;
+            background-color: #4299e1;
+
+
+	   padding: 8px 16px;
             font-size: 16px;
-            background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
-            margin-top: 20px;
+            border-radius: 0.375rem;
+            margin-left: 5px;
+margin-bottom: 5px;
+
         }
     </style>
 
@@ -649,14 +668,12 @@
             <div data-tab-content="game" class="tab-content hidden">
                 <div class="bg-gray-50 p-4 rounded-md shadow-sm text-center">
                     <div id="game-explanation">
-                        <h3>About the Game</h3>
+                        <h2 class="section-title">About the Game</h2
                         <ul>
                             <li>This is a guessing game where you have to guess the city in the image.</li>
-                            <li>The image is covered by 100 black rectangles.</li>
-                            <li>Click on the rectangles to reveal the image.</li>
+                            <li>The image is covered by 100 black rectangles. Click on the rectangles to reveal the image.</li>
                             <li>The number of clicks is your score. The lower the better.</li>
-                            <li>Guess the city by typing its name in the text box and clicking the submit button.</li>
-                            <li>If you guess correctly, you win and see some exploding confetti.</li>
+                            <li>Guess the city by typing its name in the text box and clicking the submit button. If you guess correctly, you win and see some exploding confetti. Can't guess? Click 'Reveal' to see the answer.</li>
                         </ul>
                     </div>
                     <div id="container">
@@ -666,9 +683,10 @@
                     <div id="input-container">
                         <input type="text" id="guess-input" placeholder="Guess the city">
                         <button id="submit-button">Submit</button>
+                        <button id="reveal-button">Reveal</button>
                     </div>
                     <div id="game-over">
-                        <div id="game-over-text">Congratulations! You guessed it!</div>
+                        <div id="game-over-text"></div>
                         <div id="score"></div>
                         <button id="restart-button">Restart</button>
                     </div>
@@ -731,23 +749,12 @@
             const prayerPassageDisplay = document.getElementById('prayer-passage');
 
             // Arcade Game Elements
-            // const gameArea = document.getElementById('game-area'); // No longer used
-            // const scrambleWordDisplay = document.getElementById('scramble-word'); // No longer used
-            // const guessInput = document.getElementById('guess-input'); // Now part of the new game
-            // const checkGuessButton = document.getElementById('check-guess-btn'); // No longer used
-            // const gameFeedback = document.getElementById('game-feedback'); // No longer used
-            // const funFact = document.getElementById('fun-fact'); // No longer used
-            // const newScrambleButton = document.getElementById('new-scramble-btn'); // No longer used
-            // const gamePassageDisplay = document.getElementById('game-passage'); // No longer used
-            // const scrambleLoading = document.getElementById('scramble-loading'); // No longer used
-            // const scrambleError = document.getElementById('scramble-error'); // No longer used
-
-            // Guess the City Game Elements
             const cityContainer = document.getElementById('container');
             const cityBgImage = document.getElementById('bg-image');
             const cityCounterDisplay = document.getElementById('counter');
             const cityGuessInput = document.getElementById('guess-input');
             const citySubmitButton = document.getElementById('submit-button');
+            const cityRevealButton = document.getElementById('reveal-button'); // New Reveal button
             const cityGameOver = document.getElementById('game-over');
             const cityGameOverText = document.getElementById('game-over-text');
             const cityScoreDisplay = document.getElementById('score');
@@ -766,8 +773,6 @@
             generateQuestionsButton.addEventListener('click', generateQuizAndDiscussion);
             nextButton.addEventListener('click', nextQuestion);
             restartButton.addEventListener('click', restartQuiz);
-            // checkGuessButton.addEventListener('click', checkScrambleGuess); // Removed
-            // newScrambleButton.addEventListener('click', loadNewScramble); // Removed
 
             // Tab switching logic
             tabs.forEach(tab => {
@@ -1502,6 +1507,23 @@
                 }
             });
 
+            // Add click event to the reveal button
+            cityRevealButton.addEventListener('click', revealCity);
+
+            function revealCity() {
+                if (!cityGameStarted) return; // Don't do anything if the game hasn't started
+                cityGameStarted = false;
+                stopCityGame();
+                cityGameOverText.textContent = `You revealed the city: ${correctCity.charAt(0).toUpperCase() + correctCity.slice(1)}`;
+                cityScoreDisplay.textContent = `Clicks before reveal: ${cityClickCount}`;
+                cityGameOver.style.display = 'flex';
+                // Remove confetti if it's there
+                const confettiCanvas = document.getElementById('confetti-canvas');
+                if (confettiCanvas) {
+                    confettiCanvas.remove();
+                }
+            }
+
             // Function to start confetti animation
             function startConfetti() {
                 const confettiCanvas = document.createElement('canvas');
@@ -1559,6 +1581,7 @@
                 });
                 cityGuessInput.disabled = true;
                 citySubmitButton.disabled = true;
+                cityRevealButton.disabled = true;
             }
 
             // Function to restart the game
@@ -1574,6 +1597,7 @@
                 createCityPixels();
                 cityGuessInput.disabled = false;
                 citySubmitButton.disabled = false;
+                cityRevealButton.disabled = false;
                 cityGuessInput.value = '';
                 cityGameOver.style.display = 'none';
                 cityGameStarted = false;
