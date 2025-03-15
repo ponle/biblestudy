@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bible Study Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            /* Lighter gray background */
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 2rem auto;
+            background-white: #fff;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            /* For rounded corners on tab content */
+        }
+
+        .tab-list {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border-bottom: 1px solid #e5e7eb;
+            /* Lighter border */
+        }
+
+        .tab-list-item {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-weight: 500;
+            color: #6b7280;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-list-item.active {
+            border-color: #4338ca;
+            /* Indigo-600 */
+            color: #4338ca;
+            font-weight: 600;
+        }
+
+        .tab-list-item:hover:not(.active) {
+            background-color: #f9fafb;
+        }
+
+        .tab-content {
+            padding: 1.5rem;
+        }
+
+        .section-title {
+            color: #374151;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .input-label {
+            display: block;
+            color: #374151;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-field {
+            display: block;
+            width: 100%;
+            padding: 0.625rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5rem;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            margin-bottom: 1rem;
+        }
+
+        .input-field:focus {
+            color: #495057;
+            background-color: #fff;
+            border-color: #818cf8;
+            /* Indigo-400 */
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(163, 163, 252, 0.25);
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            color: #fff;
+            background-color: #4299e1;
+            /* Indigo-600 */
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .button:hover {
+            background-color: #4c41a5;
+            /* Darker Indigo */
+        }
+
+        .button:disabled {
+            background-color: #a5a1d2;
+            cursor: not-allowed;
+        }
+
+        .drag-item {
+            background-color: #f0f4ff;
+            /* Lighter Indigo */
+            border: 1px solid #a3aed0;
+            border-radius: 0.25rem;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .drop-zone {
+            background-color: #f9f9f9;
+            border: 2px dashed #d1d5db;
+            border-radius: 0.25rem;
+            padding: 1rem;
+            min-height: 3rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+        }
+
+        .drop-zone.active {
+            border-color: #4338ca;
+            background-color: #e0e7ff;
+        }
+
+        .drop-zone.filled {
+            color: #374151;
+            border: 2px solid #86efac;
+            /* Green-300 */
+            background-color: #dcfce7;
+            /* Green-100 */
+        }
+
+        .matching-item {
+            background-color: #f0f9ff;
+            /* Lighter Blue */
+            border: 1px solid #a7dbff;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .matching-item.selected {
+            background-color: #cceeff;
+            border-color: #69c0ff;
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            margin-right: 0.5rem;
+            transform: scale(1.05);
+        }
+
+        .checkbox-option label {
+            color: #374151;
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .progress-bar-container {
+            flex-grow: 1;
+            height: 10px;
+            background-color: #e0e7ff;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background-color: #60a5fa;
+            /* Blue-400 */
+            border-radius: 5px;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .score-text,
+        .progress-text {
+            font-size: 0.875rem;
+            color: #4a5568;
+            font-weight: 600;
+            min-width: 60px;
+        }
+
+        .score-text {
+            text-align: right;
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .feedback-correct {
+            background-color: #dcfce7;
+            /* Green-100 */
+            color: #16a34a;
+            /* Green-600 */
+        }
+
+        .feedback-incorrect {
+            background-color: #fee2e2;
+            /* Red-100 */
+            color: #dc2626;
+            /* Red-600 */
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .link {
+            color: #4338ca;
+            text-decoration: underline;
+        }
+
+        .link:hover {
+            color: #4c41a5;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .options-grid .button {
+            width: auto;
+        }
+
+        .matching-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .matching-column {
+            flex: 1;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 0.375rem;
+            text-align: center;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .message-success {
+            background-color: #4ade80;
+            color: #166534;
+        }
+
+        .message-info {
+            background-color: #60a5fa;
+            color: #1e3a8a;
+        }
+
+        .message-warning {
+            background-color: #facc15;
+            color: #713f12;
+        }
+
+        .message-error {
+            background-color: #fee2e2;
+            color: #7f1d1d;
+        }
+
+        /* New styles for bullet points */
+        .discussion-questions-list {
+            list-style: none;
+            /* Remove default bullets */
+            padding-left: 0;
+        }
+
+        .discussion-questions-list li {
+            background-color: #f9f9f9;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .discussion-questions-list li span.emoji {
+            margin-right: 0.5rem;
+            /* Spacing between emoji and text */
+            font-size: 1.2rem;
+            /* Make emojis a bit bigger */
+            line-height: 1;
+            /* Prevent emoji from creating extra line spacing*/
+        }
+
+        .prayer-points-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .prayer-points-list li {
+            background-color: #f9f9f9;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+        }
+
+        .prayer-points-list li p {
+            margin: 0;
+            font-size: 1rem;
+            color: #374151;
+            line-height: 1.5;
+        }
+
+        .prayer-points-list .emoji {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+
+        }
+
+        /* Game specific styles */
+        #scramble-word {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #374151;
+            letter-spacing: 0.2em;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        #guess-input {
+            display: block;
+            width: 100%;
+            padding: 0.625rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5rem;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            margin-bottom: 0.5rem;
+        }
+
+        #game-feedback {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            text-align: center;
+            font-weight: 500;
+        }
+    </style>
+    <style>
+        #container {
+            position: relative;
+            width: 500px;
+            height: 333px;
+            margin: 20px auto;
+        }
+
+        #bg-image {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center; /* Center the image */
+        }
+
+        .pixel {
+            position: absolute;
+            width: 50px;
+            height: 33.3px;
+            background-color: black;
+            cursor: pointer;
+        }
+
+        #counter {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        #input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #guess-input {
+            padding: 8px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        #submit-button {
+            padding: 8px 16px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #confetti-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        #game-explanation {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        #game-explanation h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        #game-explanation ul {
+            list-style-position: inside;
+        }
+
+        #game-explanation li {
+            margin-bottom: 5px;
+        }
+
+        #game-over {
+
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        #game-over button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+
+</head>
+
+<body class="bg-gradient-to-r from-blue-100 to-purple-100 flex justify-center items-start pt-10">
+
+
+    <div class="container">
+        <ul id="tabs" class="tab-list">
+            <li data-tab="settings" class="tab-list-item active">Settings</li>
+            <li data-tab="quiz" class="tab-list-item">Quiz</li>
+            <li data-tab="discussion" class="tab-list-item">Study & Discussion</li>
+            <li data-tab="prayer" class="tab-list-item">Prayer Points</li>
+            <li data-tab="game" class="tab-list-item">Arcade Game</li> <!-- New Tab -->
+        </ul>
+
+        <div id="tab-contents">
+            <!-- Settings Tab Content -->
+            <div data-tab-content="settings" class="tab-content">
+                <div class="bg-gray-50 p-4 rounded-md shadow-sm">
+
+                    <h2 class="section-title">Quiz Settings</h2>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Set up your quiz here. You'll need a <a href="https://makersuite.google.com/app/apikey"
+                            target="_blank" class="link">Gemini API key</a>.
+                    </p>
+                    <div class="mb-4">
+                        <label for="api-key-input" class="input-label">API Key</label>
+                        <input type="password" id="api-key-input" placeholder="Enter your Gemini API key" value="AIzaSyBYvSPSCv0TVvocw_JSGgqN0M-gzYiqSzw"
+                            class="input-field">
+
+
+                    </div>
+                    <div class="mb-4">
+                        <label for="scripture-input" class="input-label">Scripture Passage (e.g., John 8:1-11, Matthew
+                            5)</label>
+                        <input type="text" id="scripture-input" value="John 8" class="input-field">
+                    </div>
+                    <div class="mb-4">
+                        <label for="num-questions-input" class="input-label">Number of Questions (max 10)</label>
+                        <input type="number" id="num-questions-input" value="5" min="1" max="10" class="input-field">
+                    </div>
+                    <div class="flex justify-center">
+                        <button id="generate-questions-btn" class="button">Generate Quiz & Study Guide</button>
+                    </div>
+                    <p id="errorArea" class="text-red-500 mt-2"></p>
+                    <div id="loading-indicator" class="mt-4 text-center text-gray-600 hidden">
+                        <svg class="animate-spin h-5 w-5 text-gray-500 inline-block" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                        Loading...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Tab Content -->
+            <div data-tab-content="quiz" class="tab-content hidden">
+                <div id="game-content" class="space-y-4">
+                    <div id="question-area" class="bg-gray-50 p-4 rounded-md shadow-sm">
+                        <p id="question-text" class="question-text"></p>
+                        <!-- Progress and Score Container -->
+                        <div class="progress-container">
+                            <div id="progress-text" class="progress-text"></div>
+                            <div class="progress-bar-container">
+                                <div id="progress-bar" class="progress-bar"></div>
+                            </div>
+                            <div id="score-display" class="score-text"></div>
+                        </div>
+
+                        <div id="options-container" class="mt-4 space-y-2">
+                            <!-- Options will be loaded here -->
+                        </div>
+                        <div id="feedback" class="mt-4 hidden">
+                            <!-- Feedback will be loaded here -->
+                        </div>
+                    </div>
+                    <div id="controls" class="flex justify-center gap-4">
+                        <button id="next-btn"
+                            class="button bg-green-500 hover:bg-green-600 text-white font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out shadow-sm hidden">Next</button>
+                        <button id="restart-btn"
+                            class="button bg-indigo-500 hover:bg-indigo-600 text-white font-semibold rounded-md py-2 px-4 transition duration-300 ease-in-out shadow-sm hidden">Restart</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Discussion Tab Content -->
+            <div data-tab-content="discussion" class="tab-content hidden">
+                <div class="bg-gray-50 p-4 rounded-md shadow-sm">
+                    <h2 class="section-title">Family Discussion Questions</h2>
+                    <p id="discussion-passage" class="text-sm text-gray-600 mb-4"></p>
+                    <div id="discussion-questions-container" class="space-y-3">
+                        <!-- Questions will be loaded here -->
+                    </div>
+                    <div id="discussion-loading" class="mt-4 text-center text-gray-600 hidden">
+                        <svg class="animate-spin h-5 w-5 text-gray-500 inline-block" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                        Loading discussion questions...
+                    </div>
+                    <p id="discussion-error" class="text-red-500 mt-2"></p>
+                </div>
+            </div>
+
+            <!-- Prayer Points Tab Content -->
+            <div data-tab-content="prayer" class="tab-content hidden">
+                <div class="bg-gray-50 p-4 rounded-md shadow-sm">
+                <h2 class="section-title">Prayer Points</h2>
+                <p id="prayer-passage" class="text-sm text-gray-600 mb-4"></p>
+                <div id="prayer-points-container">
+                    <!-- Prayer points will be loaded here -->
+                </div>
+
+                <div id="prayer-loading" class="mt-4 text-center text-gray-600 hidden">
+                    <svg class="animate-spin h-5 w-5 text-gray-500 inline-block" xmlns="http://www.w3.org/2000/svg"
+                        fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                        </path>
+                    </svg>
+                    Loading prayer points...
+                </div>
+                <p id="prayer-error" class="text-red-500 mt-2"></p>
+            </div></div>
+
+            <!-- Arcade Game Tab Content -->
+            <div data-tab-content="game" class="tab-content hidden">
+                <div class="bg-gray-50 p-4 rounded-md shadow-sm text-center">
+                    <div id="game-explanation">
+                        <h3>About the Game</h3>
+                        <ul>
+                            <li>This is a guessing game where you have to guess the city in the image.</li>
+                            <li>The image is covered by 100 black rectangles.</li>
+                            <li>Click on the rectangles to reveal the image.</li>
+                            <li>The number of clicks is your score. The lower the better.</li>
+                            <li>Guess the city by typing its name in the text box and clicking the submit button.</li>
+                            <li>If you guess correctly, you win and see some exploding confetti.</li>
+                        </ul>
+                    </div>
+                    <div id="container">
+                        <div id="bg-image"></div>
+                    </div>
+                    <div id="counter">Clicks: 0</div>
+                    <div id="input-container">
+                        <input type="text" id="guess-input" placeholder="Guess the city">
+                        <button id="submit-button">Submit</button>
+                    </div>
+                    <div id="game-over">
+                        <div id="game-over-text">Congratulations! You guessed it!</div>
+                        <div id="score"></div>
+                        <button id="restart-button">Restart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const gameData = {
+                questions: [],
+                scriptureReference: "",
+                discussionQuestions: [],
+                prayerPoints: [], // Add prayerPoints to gameData
+                currentGame: {
+                    verse: "",
+                    scrambledWords: [],
+                    correctWords: []
+                }
+            };
+
+            // --- API KEY AND GEMINI FUNCTION ---
+            let geminiApiKey = ""; // Variable to store the API key
+            async function callGeminiApi(question) {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`;
+                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: question }] }] }) });
+                const data = await response.json();
+                return data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            }
+
+            const questionArea = document.getElementById("question-text");
+            const optionsContainer = document.getElementById("options-container");
+            const feedback = document.getElementById("feedback");
+            const nextButton = document.getElementById("next-btn");
+            const restartButton = document.getElementById("restart-btn");
+            const currentQuestionNumberDisplay = document.getElementById("current-question-number"); // Keep, for logic
+            const totalQuestionsDisplay = document.getElementById("total-questions");  // Keep, for logic in endGame
+            const generateQuestionsButton = document.getElementById("generate-questions-btn");
+            const loadingIndicator = document.getElementById("loading-indicator");
+            const gameContent = document.getElementById("game-content");
+            const scriptureInput = document.getElementById("scripture-input");
+            const numQuestionsInput = document.getElementById("num-questions-input");
+            const apiKeyInput = document.getElementById("api-key-input");
+            const errorArea = document.getElementById('errorArea');
+            const scoreDisplay = document.getElementById("score-display");
+            const progressBar = document.getElementById("progress-bar");
+            const progressText = document.getElementById("progress-text");
+
+            // Tab elements
+            const tabs = Array.from(document.querySelectorAll('#tabs .tab-list-item'));
+            const tabContents = Array.from(document.querySelectorAll('#tab-contents > div'));
+            const discussionQuestionsContainer = document.getElementById('discussion-questions-container');
+            const discussionLoading = document.getElementById('discussion-loading');
+            const discussionError = document.getElementById('discussion-error');
+            const discussionPassageDisplay = document.getElementById('discussion-passage');
+
+            // Prayer Points
+            const prayerPointsContainer = document.getElementById('prayer-points-container');
+            const prayerLoading = document.getElementById('prayer-loading');
+            const prayerError = document.getElementById('prayer-error');
+            const prayerPassageDisplay = document.getElementById('prayer-passage');
+
+            // Arcade Game Elements
+            // const gameArea = document.getElementById('game-area'); // No longer used
+            // const scrambleWordDisplay = document.getElementById('scramble-word'); // No longer used
+            // const guessInput = document.getElementById('guess-input'); // Now part of the new game
+            // const checkGuessButton = document.getElementById('check-guess-btn'); // No longer used
+            // const gameFeedback = document.getElementById('game-feedback'); // No longer used
+            // const funFact = document.getElementById('fun-fact'); // No longer used
+            // const newScrambleButton = document.getElementById('new-scramble-btn'); // No longer used
+            // const gamePassageDisplay = document.getElementById('game-passage'); // No longer used
+            // const scrambleLoading = document.getElementById('scramble-loading'); // No longer used
+            // const scrambleError = document.getElementById('scramble-error'); // No longer used
+
+            // Guess the City Game Elements
+            const cityContainer = document.getElementById('container');
+            const cityBgImage = document.getElementById('bg-image');
+            const cityCounterDisplay = document.getElementById('counter');
+            const cityGuessInput = document.getElementById('guess-input');
+            const citySubmitButton = document.getElementById('submit-button');
+            const cityGameOver = document.getElementById('game-over');
+            const cityGameOverText = document.getElementById('game-over-text');
+            const cityScoreDisplay = document.getElementById('score');
+            const cityRestartButton = document.getElementById('restart-button');
+
+            let currentQuestionIndex = 0;
+            let score = 0;
+            let currentQuestion;
+            let numTotalQuestions = 0;
+            let dragItemBeingDragged = null;
+            let selectedMatchingItems = {};
+            let activeTab = 'settings'; // Keep track of the active tab
+
+            const bibleGatewayBaseUrl = "https://www.biblegateway.com/passage/?search=";
+
+            generateQuestionsButton.addEventListener('click', generateQuizAndDiscussion);
+            nextButton.addEventListener('click', nextQuestion);
+            restartButton.addEventListener('click', restartQuiz);
+            // checkGuessButton.addEventListener('click', checkScrambleGuess); // Removed
+            // newScrambleButton.addEventListener('click', loadNewScramble); // Removed
+
+            // Tab switching logic
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.dataset.tab;
+                    if (activeTab === tabId) return; // Do nothing if clicking the same tab
+
+                    activeTab = tabId;
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.add('hidden'));
+
+                    tab.classList.add('active');
+                    const selectedContent = document.querySelector(`#tab-contents > div[data-tab-content="${tabId}"]`);
+                    selectedContent.classList.remove('hidden');
+
+                    if (tabId === 'quiz' && gameData.questions.length === 0 && gameData.scriptureReference) {
+                        // Potentially generate quiz if not already done?
+                    } else if (tabId === 'discussion' && gameData.discussionQuestions.length === 0 && gameData.scriptureReference) {
+                        fetchDiscussionQuestions(gameData.scriptureReference);
+                    } else if (tabId === 'prayer' && gameData.prayerPoints.length === 0 && gameData.scriptureReference) {
+                        fetchPrayerPoints(gameData.scriptureReference); // Fetch prayer points
+                    } else if (tabId === 'game' && (!cityGameStarted)) {
+                        // Initialize or reset city game
+                        restartCityGame();
+                    }
+                });
+            });
+
+            function showTab(tabId) {
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(content => content.classList.add('hidden'));
+                const tabToActivate = document.querySelector(`#tabs .tab-list-item[data-tab="${tabId}"]`);
+                const contentToShow = document.querySelector(`#tab-contents > div[data-tab-content="${tabId}"]`);
+                if (tabToActivate) tabToActivate.classList.add('active');
+                if (contentToShow) contentToShow.classList.remove('hidden');
+                activeTab = tabId;
+            }
+
+            async function fetchDiscussionQuestions(scriptureReference) {
+                discussionQuestionsContainer.innerHTML = '';
+                discussionLoading.classList.remove('hidden');
+                discussionError.textContent = '';
+                discussionPassageDisplay.textContent = `Based on: ${scriptureReference}`;
+
+                const apiKey = apiKeyInput.value.trim();
+                if (!apiKey) {
+                    discussionLoading.classList.add('hidden');
+                    discussionError.textContent = "API Key is required to fetch discussion questions.";
+                    return;
+                }
+                const prompt = `Generate 3-5 discussion questions for a family Bible study, suitable for children and young adults, based on : "${scriptureReference}".  Return a JSON array of strings: ["Question 1?", "Question 2?", "Question 3?"].`;
+
+
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }],
+                        }),
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => null);
+                        let errorMessage = `Failed to fetch discussion questions. Status: ${response.status}.`;
+                        if (errorData && errorData.error && errorData.error.message) {
+                            errorMessage += ` API error: ${errorData.error.message}`;
+                        }
+                        throw new Error(errorMessage);
+                    }
+
+                    const data = await response.json();
+
+                    if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+                        let responseText = data.candidates[0].content.parts[0].text;
+
+                        // Clean up common formatting issues from the API.
+                        if (responseText.trim().startsWith('```')) {
+                            responseText = responseText.replace(/^```(?:json)?\s*([\s\S]*?)\s*```$/gmi, '$1').trim();
+                        }
+
+                        try {
+                            const questions = JSON.parse(responseText);
+                            if (Array.isArray(questions) && questions.every(q => typeof q === 'string')) {
+                                gameData.discussionQuestions = questions;
+                                displayDiscussionQuestions(); // Call the updated function
+                            } else {
+                                throw new Error("Invalid format for discussion questions.");
+                            }
+                        } catch (error) {
+                            console.error("Error parsing discussion questions:", error, responseText);
+                            discussionError.textContent = "Could not load questions due to a format error.";
+                        }
+                    } else {
+                        discussionError.textContent = "Could not load discussion questions.";
+                    }
+                } catch (error) {
+                    console.error("Error fetching discussion questions:", error);
+                    discussionError.textContent = error.message;
+                } finally {
+                    discussionLoading.classList.add('hidden');
+                }
+            }
+
+            function displayDiscussionQuestions() {
+                discussionQuestionsContainer.innerHTML = '';
+                const ul = document.createElement('ul');
+                ul.className = 'discussion-questions-list'; // Apply new class
+
+                // Define a list of emojis
+                const emojis = ['🤔', '📖', '👪', '🌟', '💬', '😇', '🙏'];
+
+                if (gameData.discussionQuestions.length > 0) {
+                    gameData.discussionQuestions.forEach((question, index) => {
+                        const li = document.createElement('li');
+                        // Use modulo to cycle through emojis
+                        const emoji = emojis[index % emojis.length];
+
+                        li.innerHTML = `<span class="emoji">${emoji}</span> ${question}`;
+                        ul.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.className = "text-gray-600 italic";
+                    li.textContent = "No discussion questions generated for this passage.";
+                    ul.appendChild(li);
+                }
+                discussionQuestionsContainer.appendChild(ul);
+            }
+
+            // New functions for Prayer Points
+            async function fetchPrayerPoints(scriptureReference) {
+                prayerPointsContainer.innerHTML = '';
+                prayerLoading.classList.remove('hidden');
+                prayerError.textContent = '';
+                prayerPassageDisplay.textContent = `Based on: ${scriptureReference}`
+
+                const apiKey = apiKeyInput.value.trim();
+                if (!apiKey) {
+                    prayerLoading.classList.add('hidden');
+                    prayerError.textContent = "API Key is required to fetch prayer points.";
+                    return;
+                }
+
+                const prompt = `Generate 3 concise prayer points based on the Bible passage: "${scriptureReference}".  Return a JSON array of strings: ["Prayer point 1", "Prayer point 2", "Prayer point 3"].`;
+
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => null);
+                        let errorMessage = `Failed to fetch prayer points. Status: ${response.status}.`;
+                        if (errorData && errorData.error && errorData.error.message) {
+                            errorMessage += ` API error: ${errorData.error.message}`;
+                        }
+                        throw new Error(errorMessage);
+                    }
+
+                    const data = await response.json();
+                    if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+                        let responseText = data.candidates[0].content.parts[0].text;
+
+                        // Clean up common formatting issues.
+                        if (responseText.trim().startsWith('```')) {
+                            responseText = responseText.replace(/^```(?:json)?\s*([\s\S]*?)\s*```$/gmi, '$1').trim();
+                        }
+                        try {
+                            const points = JSON.parse(responseText);
+                            if (Array.isArray(points) && points.every(p => typeof p === 'string')) {
+                                gameData.prayerPoints = points;
+                                displayPrayerPoints();
+                            } else {
+                                throw new Error("Invalid format for prayer points.");
+                            }
+                        } catch (error) {
+                            console.error("Error parsing prayer points:", error, responseText);
+                            prayerError.textContent = "Could not load prayer points due to a format error.";
+                        }
+                    } else {
+                        prayerError.textContent = "Could not load prayer points.";
+                    }
+                } catch (error) {
+                    console.error("Error fetching prayer points:", error);
+                    prayerError.textContent = error.message;
+                } finally {
+                    prayerLoading.classList.add('hidden');
+                }
+            }
+
+            function displayPrayerPoints() {
+                prayerPointsContainer.innerHTML = '';
+                const ul = document.createElement('ul');
+                ul.className = "prayer-points-list";
+
+                const emojis = ['🙏', '✨', '🙌', '✝️', '🕊️']; // Emojis for prayer points
+
+
+                if (gameData.prayerPoints.length > 0) {
+                    gameData.prayerPoints.forEach((point, index) => {
+                        const li = document.createElement('li');
+                        const emoji = emojis[index % emojis.length]
+                        li.innerHTML = `<p><span class="emoji">${emoji}</span>${point}</p>`;
+                        ul.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.textContent = "No prayer points generated for this passage.";
+                    li.className = "text-gray-600 italic";
+                    ul.appendChild(li);
+                }
+                prayerPointsContainer.appendChild(ul);
+            }
+
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            function startGame() {
+                currentQuestionIndex = 0;
+                score = 0;
+                selectedMatchingItems = {};
+                numTotalQuestions = gameData.questions.length;
+                updateDisplay();
+                loadQuestion();
+                nextButton.classList.add("hidden");
+                restartButton.classList.add("hidden");
+                feedback.classList.add("hidden");
+                gameContent.classList.remove("hidden");
+                updateScoreDisplay();
+                showTab('quiz'); // Switch to the quiz tab when the game starts
+            }
+
+            function updateDisplay() {
+                updateProgressBar();
+                updateProgressText();
+            }
+
+            function restartQuiz() {
+                currentQuestionIndex = 0;
+                score = 0;
+                selectedMatchingItems = {};
+                // Do NOT reset gameData.questions or discussionQuestions here,
+                // so the user doesn't lose the generated content.
+                if (gameData.questions.length > 0) {
+                    startGame(); // Restart the quiz with existing questions
+                } else {
+                    showTab('settings'); // Go back to settings if no questions available
+                }
+                updateScoreDisplay();
+            }
+
+
+            function loadQuestion() {
+                updateDisplay();
+                if (gameData.questions.length > 0) {
+                    currentQuestion = gameData.questions[currentQuestionIndex];
+                    questionArea.textContent = currentQuestion.question;
+                    optionsContainer.innerHTML = "";
+                    feedback.classList.add("hidden");
+                    nextButton.classList.add("hidden");
+
+                    switch (currentQuestion.type) {
+                        case "True/False":
+                            createTrueFalseOptions();
+                            break;
+                        case "Multiple Choice":
+                            createMultipleChoiceOptions();
+                            break;
+                        case "Fill in the Blank":
+                            createFillInTheBlankOption();
+                            break;
+                        case "Drag and Drop":
+                            createDragAndDropOptions();
+                            break;
+                        case "Matching":
+                            createMatchingOptions();
+                            break;
+                        case "Multiple Select":
+                            createMultipleSelectOptions();
+                            break;
+                        default:
+                            questionArea.textContent = "Unsupported question type.";
+                    }
+                } else {
+                    questionArea.textContent = "No questions generated.";
+                }
+            }
+
+            function createTrueFalseOptions() {
+                optionsContainer.innerHTML = "";
+                const trueButton = createButton('True', () => checkAnswer(true, currentQuestion.correctAnswer));
+                const falseButton = createButton('False', () => checkAnswer(false, currentQuestion.correctAnswer));
+                optionsContainer.append(trueButton, falseButton);
+            }
+
+            function createMultipleChoiceOptions() {
+                optionsContainer.innerHTML = "";
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                currentQuestion.options.forEach(option => {
+                    const button = createButton(option, () => checkAnswer(option, currentQuestion.correctAnswer));
+                    optionsGrid.appendChild(button);
+                });
+                optionsContainer.appendChild(optionsGrid);
+            }
+
+            function createFillInTheBlankOption() {
+                optionsContainer.innerHTML = "";
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = 'Enter your answer';
+                input.classList.add('input-field');
+                input.style.width = 'calc(100% - 85px)'; // Adjust width for button
+                input.style.display = 'inline-block';
+
+                const submitBtn = createButton('Submit', () => checkAnswer(input.value.trim(), currentQuestion.correctAnswer));
+                submitBtn.style.width = '80px';
+                submitBtn.style.display = 'inline-block';
+                submitBtn.style.marginLeft = '5px';
+
+                optionsContainer.append(input, submitBtn);
+            }
+
+            function createDragAndDropOptions() {
+                optionsContainer.innerHTML = "";
+                const items = [...currentQuestion.items];
+                const correctOrder = currentQuestion.correctOrder;
+                let currentOrder = {};
+                let dropZoneElements = [];
+
+                const itemsToDragDiv = document.createElement("div");
+                itemsToDragDiv.className = "mb-4";
+
+                const shuffledItems = shuffleArray([...items]);
+                shuffledItems.forEach(item => {
+                    const dragItem = document.createElement("div");
+                    dragItem.className = "drag-item p-3 rounded-md shadow-sm";
+                    dragItem.textContent = item;
+                    dragItem.draggable = true;
+                    dragItem.dataset.value = item;
+                    dragItem.ondragstart = (event) => {
+                        dragItemBeingDragged = event.target;
+                        event.dataTransfer.setData('text/plain', event.target.dataset.value);
+                    };
+                    itemsToDragDiv.appendChild(dragItem);
+
+                });
+                optionsContainer.appendChild(itemsToDragDiv);
+
+                const dropZonesDiv = document.createElement("div");
+                dropZonesDiv.className = "grid grid-cols-1 gap-2"; // Grid layout for drop zones
+                correctOrder.forEach(correctItem => {
+                    const dropZone = document.createElement("div");
+                    dropZone.className = "drop-zone";
+                    dropZone.textContent = "Drop here";
+                    dropZone.dataset.expected = correctItem;
+                    dropZone.ondragover = (event) => {
+                        event.preventDefault();
+                        if (!dropZone.classList.contains('filled')) {
+                            dropZone.classList.add('active');
+                        }
+                    };
+                    dropZone.ondragleave = () => dropZone.classList.remove('active');
+                    dropZone.ondrop = (event) => {
+                        event.preventDefault();
+                        dropZone.classList.remove('active');
+                        if (!dropZone.classList.contains('filled') && dragItemBeingDragged) {
+                            const droppedValue = dragItemBeingDragged.dataset.value;
+                            dropZone.textContent = droppedValue;
+                            dropZone.classList.add('filled');
+                            dropZone.dataset.dropped = droppedValue;
+                            currentOrder[dropZone.dataset.expected] = droppedValue;
+                            dragItemBeingDragged.classList.add('hidden');
+                            dragItemBeingDragged = null;
+
+                            if (Object.keys(currentOrder).length === correctOrder.length) {
+                                checkDragAndDropAnswer();
+                            }
+                        }
+                    };
+                    dropZonesDiv.appendChild(dropZone);
+                    dropZoneElements.push(dropZone);
+                });
+                optionsContainer.appendChild(dropZonesDiv);
+            }
+
+            function createMatchingOptions() {
+                optionsContainer.innerHTML = "";
+                selectedMatchingItems = {};
+
+                const matchingContainer = document.createElement("div");
+                matchingContainer.className = "matching-container";
+
+                const column1 = document.createElement("div");
+                column1.className = "matching-column space-y-2";
+                const column2 = document.createElement("div");
+                column2.className = "matching-column space-y-2";
+
+                const items1 = currentQuestion.items.slice(0, currentQuestion.items.length / 2);
+                const items2 = shuffleArray(currentQuestion.items.slice(currentQuestion.items.length / 2));
+
+                items1.forEach(item => {
+                    const itemDiv = document.createElement("div");
+                    itemDiv.className = "matching-item";
+                    itemDiv.textContent = item;
+                    itemDiv.dataset.value = item;
+                    itemDiv.dataset.column = '1';
+                    itemDiv.addEventListener('click', () => handleMatchingItemClick(itemDiv));
+                    column1.appendChild(itemDiv);
+                });
+
+                items2.forEach(item => {
+                    const itemDiv = document.createElement("div");
+                    itemDiv.className = "matching-item";
+                    itemDiv.textContent = item;
+                    itemDiv.dataset.value = item;
+                    itemDiv.dataset.column = '2';
+                    itemDiv.addEventListener('click', () => handleMatchingItemClick(itemDiv));
+                    column2.appendChild(itemDiv);
+                });
+
+                matchingContainer.appendChild(column1);
+                matchingContainer.appendChild(column2);
+                optionsContainer.appendChild(matchingContainer);
+
+                const checkButton = createButton('Check', checkMatchingAnswer);
+                optionsContainer.appendChild(checkButton);
+            }
+
+            function handleMatchingItemClick(itemDiv) {
+                const column = itemDiv.dataset.column;
+                const value = itemDiv.dataset.value;
+                if (itemDiv.classList.contains('selected')) {
+                    itemDiv.classList.remove('selected');
+                    selectedMatchingItems[column] = null;
+                    return;
+                }
+                const previouslySelected = optionsContainer.querySelector(`.matching-item.selected[data-column="${column}"]`);
+                if (previouslySelected) {
+                    previouslySelected.classList.remove('selected');
+                }
+
+                itemDiv.classList.add('selected');
+                selectedMatchingItems[column] = value;
+            }
+
+            function checkMatchingAnswer() {
+                let isCorrect = true;
+                if (Object.keys(selectedMatchingItems).length !== 2 || !selectedMatchingItems['1'] || !selectedMatchingItems['2']) {
+                    isCorrect = false;
+                } else {
+                    const correctMatch = currentQuestion.correctMatches[selectedMatchingItems['1']];
+                    if (correctMatch !== selectedMatchingItems['2']) {
+                        isCorrect = false;
+                    }
+                }
+
+                displayFeedback(isCorrect, currentQuestion.correctMatches);
+                nextButton.classList.remove('hidden');
+                selectedMatchingItems = {};
+            }
+
+            function createMultipleSelectOptions() {
+                optionsContainer.innerHTML = '';
+                const selectedAnswers = new Set();
+
+                currentQuestion.options.forEach(option => {
+                    const checkboxContainer = document.createElement('div');
+                    checkboxContainer.className = 'checkbox-option';
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = option;
+                    checkbox.id = `option-${option.replace(/\s/g, "-")}`; // Replace spaces for valid ID
+
+                    checkbox.addEventListener('change', () => {
+                        if (checkbox.checked) {
+                            selectedAnswers.add(option);
+                        } else {
+                            selectedAnswers.delete(option);
+                        }
+                    });
+
+                    const label = document.createElement('label');
+                    label.textContent = option;
+                    label.htmlFor = checkbox.id;
+
+                    checkboxContainer.appendChild(checkbox);
+                    checkboxContainer.appendChild(label);
+                    optionsContainer.appendChild(checkboxContainer);
+                });
+
+                const checkButton = createButton('Check', () => checkMultipleSelectAnswer(selectedAnswers));
+                optionsContainer.appendChild(checkButton);
+            }
+
+            function checkMultipleSelectAnswer(selectedAnswers) {
+                const correctAnswersSet = new Set(currentQuestion.correctAnswer);
+                const isCorrect = selectedAnswers.size === correctAnswersSet.size && [...selectedAnswers].every(answer => correctAnswersSet.has(answer));
+                displayFeedback(isCorrect, currentQuestion.correctAnswer);
+                nextButton.classList.remove('hidden');
+            }
+
+            function checkDragAndDropAnswer() {
+                let isCorrect = true;
+                let correctOrderText = "Correct Order: <ol class='list-decimal list-inside'>";
+
+                for (let i = 0; i < currentQuestion.correctOrder.length; i++) {
+                    const expectedItem = currentQuestion.correctOrder[i];
+                    const dropZone = Array.from(optionsContainer.querySelectorAll('.drop-zone')).find(dz => dz.dataset.expected === expectedItem);
+
+                    if (!dropZone || dropZone.dataset.dropped !== expectedItem) {
+                        isCorrect = false;
+                    }
+                    correctOrderText += `<li>${expectedItem}</li>`;
+                }
+                correctOrderText += "</ol>";
+
+                displayFeedback(isCorrect, correctOrderText);
+                nextButton.classList.remove('hidden');
+            }
+
+            function checkAnswer(userAnswer, correctAnswer) {
+                let isCorrect;
+                if (currentQuestion.type === "Fill in the Blank") {
+                    isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+                } else {
+                    isCorrect = userAnswer === correctAnswer;
+                }
+
+                displayFeedback(isCorrect, correctAnswer);
+
+                if (currentQuestionIndex < gameData.questions.length - 1) {
+                    nextButton.classList.remove("hidden");
+                } else {
+                    endGame();
+                }
+            }
+
+            function extractVerseReference(questionText, fullReference) {
+                const verseRegex = /(\d+(?:-\d+)?(?:,\s*\d+(?:-\d+)?)*)/g;
+                let match;
+                let verses = [];
+
+                while ((match = verseRegex.exec(questionText)) !== null) {
+                    verses.push(match[1]);
+                }
+
+                if (verses.length === 0) {
+                    return fullReference;
+                }
+
+                const parts = fullReference.split(/ (.+)/);
+                if (parts.length < 2) {
+                    return fullReference;
+                }
+
+                const book = parts[0];
+                const chapterAndVerses = parts[1];
+
+                const chapterVerseParts = chapterAndVerses.split(":");
+                if (chapterVerseParts.length < 2) {
+                    return fullReference
+                }
+                const chapter = chapterVerseParts[0];
+
+                const combinedVerses = verses.join(",");
+                return `${book} ${chapter}:${combinedVerses}`;
+            }
+
+
+            function displayFeedback(isCorrect, correctAnswer) {
+                feedback.classList.remove("hidden");
+                let feedbackText = "";
+                let feedbackClasses = "feedback ";
+
+                if (isCorrect) {
+                    score++;
+                    feedbackText = "🎉 Correct!";
+                    feedbackClasses += "feedback-correct";
+                } else {
+                    let correctAnswerText = "";
+                    if (Array.isArray(correctAnswer)) {
+                        correctAnswerText = correctAnswer.join(', ');
+                    } else if (typeof correctAnswer === 'object') {
+                        let pairs = [];
+                        for (let key in correctAnswer) {
+                            pairs.push(`${key}: ${correctAnswer[key]}`);
+                        }
+                        correctAnswerText = pairs.join(', ');
+                    } else {
+                        correctAnswerText = correctAnswer;
+                    }
+
+                    const specificVerseRef = extractVerseReference(currentQuestion.question, gameData.scriptureReference);
+                    const bibleGatewayUrl = `${bibleGatewayBaseUrl}${encodeURIComponent(specificVerseRef)}&version=NIV`;
+                    feedbackText = `🤔 Incorrect. Correct: ${correctAnswerText} (<a href="${bibleGatewayUrl}" target="_blank" class="link">${specificVerseRef}</a>)`;
+                    feedbackClasses += "feedback-incorrect";
+                }
+                feedback.className = feedbackClasses;
+                feedback.innerHTML = feedbackText;
+                updateScoreDisplay();
+            }
+
+            function updateProgressBar() {
+                const progressPercentage = (numTotalQuestions > 0) ? ((currentQuestionIndex + 1) / numTotalQuestions) * 100 : 0;
+                progressBar.style.width = `${progressPercentage}%`;
+            }
+
+            function updateProgressText() {
+                if (progressText) {
+                    progressText.textContent = `Question: ${currentQuestionIndex + 1} / ${numTotalQuestions}`;
+                }
+            }
+
+            function updateScoreDisplay() {
+                if (scoreDisplay) {
+                    scoreDisplay.textContent = `Score: ${score} / ${numTotalQuestions}`;
+                }
+            }
+
+            function nextQuestion() {
+                if (currentQuestionIndex < gameData.questions.length - 1) {
+                    currentQuestionIndex++;
+                    loadQuestion();
+                    updateScoreDisplay();
+                    updateProgressBar();
+                }
+            }
+
+            function endGame() {
+                questionArea.textContent = `Quiz Complete!`;
+                optionsContainer.innerHTML = "";
+                nextButton.classList.add("hidden");
+                restartButton.classList.remove("hidden");
+                updateScoreDisplay();
+                updateProgressBar();
+
+                const percentage = (numTotalQuestions > 0) ? (score / numTotalQuestions) * 100 : 0;
+                let message = "";
+                let messageClass = "message mb-4";
+
+                if (percentage === 100) {
+                    message = "🌟 Perfect score! You're a Bible scholar!";
+                    messageClass += " message-success";
+                } else if (percentage >= 80) {
+                    message = "👍 Great job! You know your scriptures well!";
+                    messageClass += " message-info";
+                } else if (percentage >= 60) {
+                    message = "😊 Good effort! A little more review would be beneficial.";
+                    messageClass += " message-warning";
+                } else {
+                    message = "📚 Keep studying! Every step deepens your understanding.";
+                    messageClass += " message-error";
+                }
+                feedback.innerHTML = `<div class='${messageClass}'>${message}</div>`;
+                feedback.classList.remove("hidden", "feedback-correct", "feedback-incorrect");
+            }
+
+            function createButton(text, clickHandler) {
+                const button = document.createElement('button');
+                button.textContent = text;
+                button.classList.add('button');
+                button.addEventListener('click', clickHandler);
+                return button;
+            }
+
+            // --- Guess the City Game Functions ---
+            let cityClickCount = 0;
+            let cityPixels = [];
+            let cityGameStarted = false;
+            let correctCity = ""; // To store the correct city for the current game
+
+            const cityImages = [
+                'https://media.timeout.com/images/106113952/image.jpg', // Toronto
+                'https://fullsuitcase.com/wp-content/uploads/2022/05/One-day-in-New-York-USA-NYC-day-trip-itinerary.jpg', // New York
+                'https://img.static-af.com/transform/45cb9a13-b167-4842-8ea8-05d0cc7a4d04/', // Paris
+                'https://www.studying-in-uk.org/wp-content/uploads/2019/05/study-in-london.jpg', // London
+                'https://media.architecturaldigest.com/photos/6559735fb796d428bef00d25/1:1/w_3712,h_3712,c_limit/GettyImages-1731443210.jpg' //USA
+            ];
+            const cityNames = ['toronto', 'new york', 'paris', 'london', 'USA'];
+
+            // Create the 100 rectangles
+            function createCityPixels() {
+                cityBgImage.innerHTML = ''; // Clear previous pixels
+                cityPixels = [];
+                for (let i = 0; i < 10; i++) {
+                    for (let j = 0; j < 10; j++) {
+                        const pixel = document.createElement('div');
+                        pixel.classList.add('pixel');
+                        pixel.style.left = `${j * 50}px`;
+                        pixel.style.top = `${i * 33.3}px`;
+                        cityBgImage.appendChild(pixel);
+                        cityPixels.push(pixel);
+
+                        // Add click event to each rectangle
+                        pixel.addEventListener('click', () => {
+                            if (!cityGameStarted) {
+                                cityGameStarted = true;
+                            }
+                            pixel.style.display = 'none'; // Hide the rectangle
+                            cityClickCount++;
+                            cityCounterDisplay.textContent = `Clicks: ${cityClickCount}`;
+                        });
+                    }
+                }
+            }
+
+            // Add click event to the submit button
+            citySubmitButton.addEventListener('click', () => {
+                const guess = cityGuessInput.value.trim().toLowerCase();
+                if (guess === correctCity && cityGameStarted) {
+                    cityGameOverText.textContent = 'Congratulations! You guessed it!';
+                    cityScoreDisplay.textContent = `Your score is ${cityClickCount}. The lower the better!`;
+                    cityGameOver.style.display = 'flex';
+                    stopCityGame();
+                    startConfetti(); // Start confetti if the guess is correct
+                } else if (cityGameStarted) {
+                    cityClickCount++; // Increment counter if the guess is wrong
+                    cityCounterDisplay.textContent = `Clicks: ${cityClickCount}`;
+                }
+            });
+
+            // Function to start confetti animation
+            function startConfetti() {
+                const confettiCanvas = document.createElement('canvas');
+                confettiCanvas.id = 'confetti-canvas';
+                cityContainer.appendChild(confettiCanvas);
+                const confettiContext = confettiCanvas.getContext('2d');
+                confettiCanvas.width = cityContainer.offsetWidth;
+                confettiCanvas.height = cityContainer.offsetHeight;
+
+                // Function to generate a random confetti particle
+                function createConfettiParticle() {
+                    const color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                    const x = Math.random() * confettiCanvas.width;
+                    const y = Math.random() * confettiCanvas.height;
+                    const size = Math.random() * 5 + 5;
+                    const opacity = Math.random();
+                    const tilt = (Math.random() * 20 - 10);
+                    return { color, x, y, size, opacity, tilt };
+                }
+
+                let confettiParticles = Array(100).fill().map(createConfettiParticle);
+
+                // Function to draw confetti particles
+                function drawConfetti() {
+                    confettiContext.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+                    confettiParticles.forEach((particle) => {
+                        confettiContext.beginPath();
+                        confettiContext.fillStyle = particle.color;
+                        confettiContext.globalAlpha = particle.opacity;
+                        confettiContext.fillRect(particle.x, particle.y, particle.size, particle.size);
+                        confettiContext.globalAlpha = 1;
+
+                        particle.y += 1;
+                        particle.x += Math.sin(particle.tilt);
+
+                        if (particle.y > confettiCanvas.height) {
+                            particle.y = -10;
+                            particle.x = Math.random() * confettiCanvas.width;
+                        }
+                    });
+                }
+
+                // Animation loop
+                function updateConfetti() {
+                    drawConfetti();
+                    requestAnimationFrame(updateConfetti);
+                }
+                updateConfetti();
+            }
+
+            // Function to stop the game
+            function stopCityGame() {
+                cityPixels.forEach(pixel => {
+                    pixel.style.display = 'none';
+                });
+                cityGuessInput.disabled = true;
+                citySubmitButton.disabled = true;
+            }
+
+            // Function to restart the game
+            function restartCityGame() {
+                cityClickCount = 0;
+                cityCounterDisplay.textContent = `Clicks: ${cityClickCount}`;
+                // Dynamically select a city
+                const randomIndex = Math.floor(Math.random() * cityImages.length);
+                cityBgImage.style.backgroundImage = `url('${cityImages[randomIndex]}')`;
+                correctCity = cityNames[randomIndex];
+                console.log("Correct city:", correctCity); // For debugging
+
+                createCityPixels();
+                cityGuessInput.disabled = false;
+                citySubmitButton.disabled = false;
+                cityGuessInput.value = '';
+                cityGameOver.style.display = 'none';
+                cityGameStarted = false;
+                const confettiCanvas = document.getElementById('confetti-canvas');
+                if (confettiCanvas) {
+                    confettiCanvas.remove();
+                }
+            }
+
+            cityRestartButton.addEventListener('click', restartCityGame);
+
+
+            async function generateQuizAndDiscussion() {
+                const apiKey = apiKeyInput.value.trim();
+                const scriptureReference = scriptureInput.value.trim();
+                const numQuestions = parseInt(numQuestionsInput.value, 10) || 5;
+
+                if (!apiKey) {
+                    alert('Please enter your Gemini API key.');
+                    return;
+                }
+                if (!scriptureReference) {
+                    alert('Please enter a Bible passage.');
+                    return;
+                }
+                if (numQuestions < 1 || numQuestions > 10) {
+                    alert('Please choose between 1 and 10 questions.');
+                    return;
+                }
+
+                errorArea.textContent = '';
+                loadingIndicator.classList.remove("hidden");
+                generateQuestionsButton.disabled = true;
+                generateQuestionsButton.textContent = "Generating...";
+
+                gameData.scriptureReference = scriptureReference;
+                gameData.questions = []; // Clear previous questions
+                gameData.discussionQuestions = []; // Clear previous discussion questions
+                gameData.prayerPoints = []; // Clear previous prayer points
+                gameData.currentGame.verse = ""; // Clear previous game verse
+                // funFact.classList.add('hidden'); // No longer used
+
+                geminiApiKey = apiKey; // Set the global API key
+
+                // --- Quiz Generation ---
+                const quizPrompt = `Generate exactly ${numQuestions} questions about the Bible passage: "${scriptureReference}".
+            Each question MUST be one of the following types: "True/False", "Multiple Choice", "Fill in the Blank", "Drag and Drop", "Matching", or "Multiple Select".
+            Do NOT include any other question types.
+            The response MUST be valid JSON in the following format, and no other text:
+            [
+                {"type": "True/False", "question": "...", "correctAnswer": true},
+                {"type": "Multiple Choice", "question": "...", "options": ["...", "...", "..."], "correctAnswer": "..."},
+                {"type": "Fill in the Blank", "question": "...", "correctAnswer": "..."},
+                {"type": "Drag and Drop", "question": "...", "items": ["...", "...", "..."], "correctOrder": ["...", "...", "..."]},
+                {"type": "Matching", "question": "...", "items": ["item1", "item2", "match1", "match2"], "correctMatches": {"item1": "match1", "item2": "match2"}},
+                {"type": "Multiple Select", "question": "...", "options": ["...", "...", "..."], "correctAnswer": ["...", "..."]}
+            ]`;
+
+                try {
+                    const quizResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: quizPrompt }] }] }),
+                    });
+
+                    if (!quizResponse.ok) throw new Error(`Quiz API Error: ${quizResponse.status}`);
+
+                    const quizData = await quizResponse.json();
+                    let quizResponseText = quizData.candidates[0]?.content?.parts[0]?.text;
+                    if (quizResponseText && quizResponseText.trim().startsWith('```')) {
+                        quizResponseText = quizResponseText.replace(/^```(?:json)?\s*([\s\S]*?)\s*```$/gmi, '$1').trim();
+                    }
+                    const parsedQuizQuestions = JSON.parse(quizResponseText);
+                    const validQuestions = validateQuestions(parsedQuizQuestions, numQuestions);
+                    gameData.questions = validQuestions;
+                    numTotalQuestions = gameData.questions.length;
+
+                    // --- Discussion Questions Generation ---
+                    await fetchDiscussionQuestions(scriptureReference); // This will update gameData.discussionQuestions
+                    // --- Prayer Points Generation ---
+                    await fetchPrayerPoints(scriptureReference); // Fetch prayer points
+
+
+                    if (gameData.questions.length > 0) {
+                        startGame();
+                    } else {
+                        showTab('settings');
+                        errorArea.textContent = "Could not generate valid quiz questions. Please check the API key and passage.";
+                    }
+
+                } catch (error) {
+                    console.error("Error generating quiz or discussion:", error);
+                    alert(`Error: ${error.message}`);
+                    errorArea.textContent = `Error: ${error.message}`;
+                    showTab('settings');
+                } finally {
+                    loadingIndicator.classList.add("hidden");
+                    generateQuestionsButton.disabled = false;
+                    generateQuestionsButton.textContent = "Generate Quiz & Study Guide";
+                }
+            }
+
+            function validateQuestions(questionsData, numQuestions) {
+                if (!Array.isArray(questionsData)) return [];
+
+                const validQuestions = [];
+                const supportedTypes = ["True/False", "Multiple Choice", "Fill in the Blank", "Drag and Drop", "Matching", "Multiple Select"];
+
+                for (const question of questionsData) {
+                    if (!question || typeof question !== 'object' || !question.type || !supportedTypes.includes(question.type) || !question.question || typeof question.question !== 'string') {
+                        continue;
+                    }
+                    switch (question.type) {
+                        case "True/False": if (typeof question.correctAnswer !== 'boolean') continue; break;
+                        case "Multiple Choice": if (!Array.isArray(question.options) || question.options.some(opt => typeof opt !== 'string') || typeof question.correctAnswer !== 'string') continue; break;
+                        case "Fill in the Blank": if (typeof question.correctAnswer !== 'string') continue; break;
+                        case "Drag and Drop": if (!Array.isArray(question.items) || question.items.some(item => typeof item !== 'string') || !Array.isArray(question.correctOrder) || question.correctOrder.some(item => typeof item !== 'string')) continue; break;
+                        case "Matching": if (!Array.isArray(question.items) || question.items.some(item => typeof item !== 'string') || typeof question.correctMatches !== 'object' || Object.keys(question.correctMatches).length * 2 !== question.items.length || Object.keys(question.correctMatches).some(key => typeof question.correctMatches[key] !== 'string' || !question.items.includes(key) || !question.items.includes(question.correctMatches[key]))) continue; break;
+                        case "Multiple Select": if (!Array.isArray(question.options) || question.options.some(opt => typeof opt !== 'string') || !Array.isArray(question.correctAnswer) || question.correctAnswer.some(opt => typeof opt !== 'string')) continue; break;
+                        default: continue;
+                    }
+                    validQuestions.push(question);
+                }
+                return shuffleArray(validQuestions).slice(0, numQuestions);
+            }
+
+            // Initialize the city game on load
+            restartCityGame();
+        </script>
+
+</body>
+
+</html>
